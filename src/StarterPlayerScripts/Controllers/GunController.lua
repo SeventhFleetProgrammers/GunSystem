@@ -33,6 +33,7 @@ type GunModTable = {
     MuzzleVelocity: number
 }
 
+
 local GunController = Knit.CreateController({
     Name = 'GunController',
 
