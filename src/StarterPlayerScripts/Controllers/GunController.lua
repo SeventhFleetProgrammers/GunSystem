@@ -6,19 +6,22 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 local GunController = Knit.CreateController({
     Name = 'GunController',
 
+    GunControlMode = 'FirstPerson',
+
     CurrentGun = nil,
     Character = nil,
-    Humanoid = nil
+    Humanoid = nil,
+    Mouse = nil
 })
 
 
-function GunController:KnitStart()
+function GunController:KnitStart(): nil
     self:Respawned()
     self:ConnectEvents()
 end
 
 
-function GunController:ConnectEvents()
+function GunController:ConnectEvents(): nil
     UserInputService.InputBegan:Connect(function(input: InputObject, processed: boolean)
         self:InputBegan(input, processed)
     end)
@@ -33,11 +36,11 @@ function GunController:ConnectEvents()
 end
 
 
-function GunController:Respawned(character: Model?)
+function GunController:Respawned(character: Model?): nil
     if not character then
-        self.Character = if Knit.Player.Character and Knit.Player.Character.Parent then 
-            Knit.Player.Character 
-        else 
+        self.Character = if Knit.Player.Character and Knit.Player.Character.Parent then
+            Knit.Player.Character
+        else
             Knit.Player.CharacterAdded:Wait()
 
     else
@@ -48,16 +51,30 @@ function GunController:Respawned(character: Model?)
 end
 
 
-function GunController:InputBegan(input: InputObject, processed: boolean)
+function GunController:InputBegan(input: InputObject, processed: boolean): nil
+    if not self.CurrentGun or (input.UserInputType ~= Enum.UserInputType.MouseButton1 or processed) then
+        return
+    end
 
+    -- Add gun shooting logic here.
 end
 
 
-function GunController:CharacterDescendantAdded(descendant: Instance)
-    if not descendant:IsA('Tool') or not descendant:HasTag('Weapon') then 
-        return 
+function GunController:CharacterDescendantAdded(descendant: Instance): nil
+    if not descendant:IsA('Tool') or not descendant:HasTag('Weapon') then
+        return
     end
 
+    self.CurrentGun = descendant
+end
+
+
+function GunController:CharacterDescendantRemoved(descendant: Instance): nil
+    if descendant ~= self.CurrentGun then
+        return
+    end
+
+    self.CurrentGun = nil
 end
 
 
