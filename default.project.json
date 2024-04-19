@@ -19,7 +19,7 @@
                 "$path": "src/ServerScriptService"
             },
             "Packages": {
-                "$path": "ServerPackages/"
+                "$path": "Server/"
             }
         },
 
