@@ -5,14 +5,14 @@ local Knit = require(ReplicatedStorage.Packages.Knit)
 
 local InputController = Knit.CreateController({
     Name = 'InputController',
-    Keybinds = { 
+    Keybinds = {
         Fire = { Controller = 'GunController', Key = Enum.UserInputType.MouseButton1, CreateButton = false },
         Aim = { Controller = 'GunController', Key = Enum.UserInputType.MouseButton2, CreateButton = false },
         Sprint = { Controller = 'GunController', Key = Enum.KeyCode.LeftShift, CreateButton = false }
     },
 
     MouseSensitivity = 50,
-    Controllers = { }
+    Controllers = { },
 })
 
 function InputController:KnitStart()

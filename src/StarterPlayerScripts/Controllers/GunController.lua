@@ -39,12 +39,17 @@ local GunController = Knit.CreateController({
 
     GunControlMode = 'FirstPerson',
 
-    CurrentGun = nil,
     Character = nil,
     Humanoid = nil,
     Mouse = nil,
 
     BulletsFolder = nil,
+    Firing = false,
+
+    WeaponData = {
+        Instance = nil,
+        Specs = { }
+    },
 
     GunProperties = {
         CameraRecoil = {
@@ -92,6 +97,10 @@ function GunController:KnitStart(): nil
 
     self.BulletsFolder.Name = 'Bullets'
     self.BulletsFolder.Parent = workspace
+
+    Modules = ReplicatedStorage:WaitForChild('Modules')
+    Spring = require(Modules.Spring)
+    Ragdoll = require(Modules.Ragdoll)
 end
 
 
@@ -183,21 +192,26 @@ function GunController:Respawned(character: Model?): nil
 end
 
 
-function GunController:InputBegan(input: InputObject, processed: boolean): nil
-    if not self.CurrentGun or (input.UserInputType ~= Enum.UserInputType.MouseButton1 or processed) then
-        return
+function GunController:ProcessKeybind(action: string, userInputState: Enum.UserInputState, input: InputObject): nil
+    if action == 'Fire' and userInputState == Enum.UserInputState.Begin then
+        self:Fire()
+    elseif action == 'Fire' and userInputState == Enum.UserInputState.End then
+        self.Firing = false
     end
-
-    -- Add gun shooting logic here.
 end
-
 
 function GunController:CharacterDescendantAdded(descendant: Instance): nil
     if not descendant:IsA('Tool') or not descendant:HasTag('Weapon') then
         return
     end
 
-    self.CurrentGun = descendant
+
+    local weaponDataModule = descendant:FindFirstChild('GunSettings', true)
+    
+    if weaponDataModule then
+        self.WeaponData.Instance = descendant
+        self.WeaponData.Specs = require(weaponDataModule)
+    end
 end
 
 
@@ -206,7 +220,8 @@ function GunController:CharacterDescendantRemoved(descendant: Instance): nil
         return
     end
 
-    self.CurrentGun = nil
+    self.WeaponData.Instance = nil
+    self.WeaponData.Specs = { }
 end
 
 
@@ -214,6 +229,15 @@ function GunController:Aim()
 end
 
 function GunController:Fire()
+    if not self.WeaponData or self.Reloading then 
+        return 
+    end
+
+    if self.WeaponData.Type == 'Gun' then
+        
+    elseif self.WeaponData.Type == 'Melee' then
+        
+    end
 end
 
 return GunController

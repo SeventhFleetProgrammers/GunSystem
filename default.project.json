@@ -10,6 +10,9 @@
             },
             "Packages": {
                 "$path": "Packages/"
+            },
+            "Modules": {
+                "$path": "Replicated/"
             }
         },
 
